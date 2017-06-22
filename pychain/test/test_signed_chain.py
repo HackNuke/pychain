@@ -4,11 +4,11 @@ from nose.tools import *
 from pychain import Chain, SignedChain
 
 class Hash_Tests ():
-  def test_hash_function (self):
+  def test_default_signed_hash_function (self):
     T = {"nonce" : 0, "A": "A", "B": "B", "C": "C", "D": "D"}
     S = "BEeF"
     exp = "beefba25e6e1ea0c25ab6f4af0dee1e87cf20fdad3b234ca01ccb1034a4b394b"
-    h = SignedChain.signed_hash (T, Chain.hash, S)
+    h = SignedChain.default_signed_hash_function (T, S)
 
     assert_true (h.startswith (S.lower ()))
     assert_equals (exp, h)
@@ -17,7 +17,8 @@ class Hash_Tests ():
 class Genesis_Block_Tests ():
   def test_genesis_function (self):
     sign = "beef"
-    b = SignedChain.genesis (sign)
+    l_hash = lambda block : SignedChain.default_signed_hash_function (block, sign)
+    b = SignedChain.genesis (l_hash, sign)
     assert_equals (5, len (b))
     assert_true ("data" in b)
     assert_true ("nonce" in b)
@@ -28,7 +29,7 @@ class Genesis_Block_Tests ():
 
 class Function_Tests ():
   def setUp (self):
-    self.chain = SignedChain ("D3AD")
+    self.chain = SignedChain ("D3AD", SignedChain.default_signed_hash_function)
 
   def test_nonce_array_exists (self):
     assert_true (isinstance (self.chain, SignedChain))
@@ -45,9 +46,9 @@ class Function_Tests ():
 
 class Sequence_Tests ():
   def setUp (self):
-    self.chain = SignedChain ("b4") # quick
-    #self.chain = SignedChain ("b451c") # slow
-    #self.chain = SignedChain ("b3426dacdasfa241")  # wtf
+    self.chain = SignedChain ("b4", SignedChain.default_signed_hash_function) # quick sign
+    #self.chain = SignedChain ("b451c") # slow sign
+    #self.chain = SignedChain ("b3426dacdasfa241")  # wtf long sign
 
   def test_is_valid (self):
     self.chain.append ("block 2")

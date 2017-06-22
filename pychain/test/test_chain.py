@@ -4,22 +4,22 @@ from nose.tools import *
 from pychain import Chain
 
 class Hash_Tests ():
-  def test_hash_function (self):
+  def test_default_hash_function (self):
     T = {"A":"A", "B":"B", "C":"C", "D":"D"}
     exp = "e12e115acf4552b2568b55e93cbd39394c4ef81c82447fafc997882a02d23677"
-    h = Chain.hash (T)
+    h = Chain.default_hash_function (T)
     assert_equals (exp, h)
 
 class Gensis_Block_Tests():
   def test_genesis_function (self):
-    b = Chain.genesis ()
+    b = Chain.genesis (Chain.default_hash_function)
     assert_equals (4, len (b))
     assert_true ("data" in b)
     assert_equals ("GENESIS BLOCK", b["data"])
 
 class Function_Tests ():
   def setUp (self):
-    self.chain = Chain (Chain.genesis)
+    self.chain = Chain (Chain.genesis, Chain.default_hash_function)
 
   def test_starts_with_one_block (self):
     assert_equals (1, len (self.chain))
@@ -46,7 +46,7 @@ class Function_Tests ():
 
 class Sequence_Tests ():
   def setUp (self):
-    self.chain = Chain (Chain.genesis)
+    self.chain = Chain (Chain.genesis, Chain.default_hash_function)
 
   def test_is_valid (self):
     self.chain.append ("block 2")

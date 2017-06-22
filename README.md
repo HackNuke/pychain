@@ -17,7 +17,7 @@ Compute a blockchain of a few meaningless strings:
 ```python
 import pychain as pyc
 
-c = pyc.SignedChain ("ab")
+c = pyc.SignedChain ("ab", pyc.SignedChain.default_signed_hash_function)
 c.append ("no-one")
 c.append ("expects")
 c.append ("the spammish")
@@ -40,7 +40,7 @@ Compute a blockchain of image data from pngs (using pypng):
 import pychain as pyc
 import png
 
-c = pyc.SignedChain ("fa")
+c = pyc.SignedChain ("fa", pyc.SignedChain.default_signed_hash_function)
 c.append (png.Reader ("1.png").read ())
 c.append (png.Reader ("2.png").read ())
 c.append (png.Reader ("3.png").read ())

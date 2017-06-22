@@ -3,16 +3,16 @@ import hashlib
 
 class Chain:
   @staticmethod
-  def genesis ():
+  def genesis (hash_fn):
     """creates an initial entry for the block chain"""
     b = {"data" : "GENESIS BLOCK",
          "time" : time.time (),
          "prev" : 0}
-    b.update ({"hash" : Chain.hash (b)})
+    b.update ({"hash" : hash_fn (b)})
     return b
 
   @staticmethod
-  def hash (block_def):
+  def default_hash_function (block_def):
     """computes the hash of block_def.
     Each item in block_def is converted to bytes.
     block_def is a dictionary.
@@ -24,7 +24,7 @@ class Chain:
 
     return h.hexdigest ()
 
-  def __init__ (self, genesis_function):
+  def __init__ (self, genesis_function, hash_function):
     """creates empty lists for the data, timestampes,
     hash and previous hash.
     Previous hash is stored to avoid recomputing the hash of
@@ -33,9 +33,10 @@ class Chain:
     self.time = []  # time stamp of block
     self.chsh = []  # hash of block
     self.phsh = []  # hash of prev block
+    self.hash = hash_function
 
     # get a genesis block
-    self.__setitem__ (0, genesis_function ())
+    self.__setitem__ (0, genesis_function (self.hash))
 
   def __len__ (self):
     """returns the number of blocks in the chain"""
@@ -48,7 +49,7 @@ class Chain:
     b = {"data" : data,
          "time" : time.time (),
          "prev" : previous_hash}
-    b.update ({"hash" : Chain.hash (b)})
+    b.update ({"hash" : self.hash (b)})
     return b
     
   def append (self, data):
