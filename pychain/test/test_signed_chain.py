@@ -14,19 +14,6 @@ class Hash_Tests ():
     assert_equals (exp, h)
     assert_equals (3788, T["nonce"])
 
-class Genesis_Block_Tests ():
-  def test_genesis_function (self):
-    sign = "beef"
-    l_hash = lambda block : SignedChain.default_signed_hash_function (block, sign)
-    b = SignedChain.genesis (l_hash, sign)
-    assert_equals (5, len (b))
-    assert_true ("data" in b)
-    assert_true ("nonce" in b)
-    assert_true ("hash" in b)
-
-    assert_equals ("GENESIS BLOCK", b["data"])
-    assert_true (b["hash"].startswith (sign))
-
 class Function_Tests ():
   def setUp (self):
     self.chain = SignedChain ("D3AD", SignedChain.default_signed_hash_function)

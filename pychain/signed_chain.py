@@ -2,12 +2,6 @@ from chain import Chain
 
 class SignedChain(Chain):
   @staticmethod
-  def genesis (hash_fn, sign):
-    b = Chain.genesis (hash_fn)
-    b.update ({"hash" : hash_fn (b)})
-    return b
-
-  @staticmethod
   def default_signed_hash_function (block_def, sign):
     hash = sign[::-1] + ("0" * (64 - len (sign)))
 
@@ -22,7 +16,7 @@ class SignedChain(Chain):
 
   def __init__ (self, sign, signed_hash_function):
     self.sign = sign.lower ()
-    l_genesis_fn = lambda h_fn: SignedChain.genesis (h_fn, self.sign)
+    l_genesis_fn = lambda h_fn: Chain.genesis (h_fn)
     l_hash_fn = lambda block_def : signed_hash_function (block_def, self.sign)
 
     self.nonce = []
